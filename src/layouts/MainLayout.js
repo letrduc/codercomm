@@ -1,18 +1,19 @@
-import { Stack } from "@mui/material";
-import { Box } from "@mui/system";
-import React from "react";
 import { Outlet } from "react-router-dom";
-import AlertMgs from "../components/AlertMgs";
+import { Box, Stack } from "@mui/material";
 import MainFooter from "./MainFooter";
 import MainHeader from "./MainHeader";
+import AlertMsg from "../components/AlertMsg";
 
 function MainLayout() {
   return (
     <Stack sx={{ minHeight: "100vh" }}>
       <MainHeader />
-      <AlertMgs />
+      <AlertMsg />
+
       <Outlet />
+
       <Box sx={{ flexGrow: 1 }} />
+
       <MainFooter />
     </Stack>
   );

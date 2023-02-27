@@ -1,13 +1,13 @@
 import React, { useCallback } from "react";
+import { Box, Card, alpha, Stack } from "@mui/material";
+
 import { FormProvider, FTextField, FUploadImage } from "../../components/form";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { alpha, Box, Card, Stack } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { useDispatch, useSelector } from "react-redux";
 import { createPost } from "./postSlice";
-import FUploadAvatar from "../../components/form";
+import { LoadingButton } from "@mui/lab";
 
 const yupSchema = Yup.object().shape({
   content: Yup.string().required("Content is required"),
@@ -15,10 +15,12 @@ const yupSchema = Yup.object().shape({
 
 const defaultValues = {
   content: "",
-  image: "",
+  image: null,
 };
 
 function PostForm() {
+  const { isLoading } = useSelector((state) => state.post);
+
   const methods = useForm({
     resolver: yupResolver(yupSchema),
     defaultValues,
@@ -30,11 +32,6 @@ function PostForm() {
     formState: { isSubmitting },
   } = methods;
   const dispatch = useDispatch();
-  const { isLoading } = useSelector((state) => state.post);
-
-  const onSubmit = (data) => {
-    dispatch(createPost(data)).then(() => reset());
-  };
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -52,6 +49,10 @@ function PostForm() {
     [setValue]
   );
 
+  const onSubmit = (data) => {
+    dispatch(createPost(data)).then(() => reset());
+  };
+
   return (
     <Card sx={{ p: 3 }}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -60,7 +61,7 @@ function PostForm() {
             name="content"
             multiline
             fullWidth
-            rwos={4}
+            rows={4}
             placeholder="Share what you are thinking here..."
             sx={{
               "& fieldset": {
@@ -69,8 +70,6 @@ function PostForm() {
               },
             }}
           />
-          {/* <FTextField name="image" placeholder="imgae" /> */}
-          {/* <input type="file" ref={fileInput} onChange={handleFile} /> */}
 
           <FUploadImage
             name="image"

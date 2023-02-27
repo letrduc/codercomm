@@ -8,8 +8,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 
 import { LoadingButton } from "@mui/lab";
 import { useForm } from "react-hook-form";
-import { FTextField, FormProvider } from "../../components/form";
-
+import { FormProvider, FTextField } from "../../components/form";
 import useAuth from "../../hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile } from "./userSlice";
@@ -35,7 +34,6 @@ const SOCIAL_LINKS = [
 
 function AccountSocialLinks() {
   const { user } = useAuth();
-
   const isLoading = useSelector((state) => state.user.isLoading);
 
   const defaultValues = {
@@ -48,12 +46,10 @@ function AccountSocialLinks() {
   const methods = useForm({
     defaultValues,
   });
-
   const {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const dispatch = useDispatch();
 
   const onSubmit = async (data) => {

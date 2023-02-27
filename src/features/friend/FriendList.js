@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getFriends } from "./friendSlice";
-import useCard from "./UserCard";
-import SearchInput from "../../components/SearchInput";
 import UserCard from "./UserCard";
+import SearchInput from "../../components/SearchInput";
 
 function FriendList() {
   const [filterName, setFilterName] = useState("");
@@ -21,7 +20,6 @@ function FriendList() {
   const { currentPageUsers, usersById, totalUsers, totalPages } = useSelector(
     (state) => state.friend
   );
-
   const users = currentPageUsers.map((userId) => usersById[userId]);
   const dispatch = useDispatch();
 

@@ -1,6 +1,8 @@
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { Avatar, Box, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import useAuth from "../../hooks/useAuth";
+import ActionButton from "../friend/ActionButton";
 import FriendStatus from "../friend/FriendStatus";
 
 const RootStyle = styled("div")(({ theme }) => ({
@@ -33,9 +35,7 @@ const InfoStyle = styled("div")(({ theme }) => ({
 
 function ProfileCover({ profile }) {
   const { user } = useAuth();
-
   const currentUserId = user._id;
-
   const {
     _id: targetUserId,
     name,
@@ -47,7 +47,7 @@ function ProfileCover({ profile }) {
 
   const handleError = (e) => {
     const imgIndex = Math.floor(Math.random() * 5) + 1;
-    e.target.src = `/covers/cover_${imgIndex}.jpg`;
+    e.target.src = `/covers/cover_${imgIndex}.jpeg`;
     e.target.onError = null;
   };
 
@@ -85,10 +85,18 @@ function ProfileCover({ profile }) {
         >
           <Typography variant="h5">{name}</Typography>
           <Typography sx={{ opacity: 0.72 }}>{jobTitle}</Typography>
-          {friendStatus}
+          {friendStatus ? (
+            friendStatus
+          ) : (
+            <ActionButton
+              sx={{ mt: 1 }}
+              currentUserId={currentUserId}
+              targetUserId={targetUserId}
+              friendship={friendship}
+            />
+          )}
         </Box>
       </InfoStyle>
-
       <Box sx={{ overflow: "hidden" }}>
         <img
           src={coverUrl}

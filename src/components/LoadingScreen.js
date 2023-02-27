@@ -1,5 +1,4 @@
 import { Box, CircularProgress } from "@mui/material";
-import { display, height, width } from "@mui/system";
 import React from "react";
 
 function LoadingScreen() {

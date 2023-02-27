@@ -23,26 +23,24 @@ function UserProfilePage() {
   }, [dispatch, userId]);
 
   return (
-    <div>
-      <Container>
-        {isLoading ? (
-          <LoadingScreen />
-        ) : (
-          <>
-            <Card
-              sx={{
-                mb: 3,
-                height: 280,
-                position: "relative",
-              }}
-            >
-              {selectedUser && <ProfileCover profile={selectedUser} />}
-            </Card>
-            {selectedUser && <Profile profile={selectedUser} />}
-          </>
-        )}
-      </Container>
-    </div>
+    <Container>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <>
+          <Card
+            sx={{
+              mb: 3,
+              height: 280,
+              position: "relative",
+            }}
+          >
+            {selectedUser && <ProfileCover profile={selectedUser} />}
+          </Card>
+          {selectedUser && <Profile profile={selectedUser} />}
+        </>
+      )}
+    </Container>
   );
 }
 

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUsers } from "./friendSlice";
 import {
   Stack,
   Typography,
@@ -9,23 +7,21 @@ import {
   TablePagination,
   Container,
 } from "@mui/material";
-import SearchInput from "../../components/SearchInput";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers } from "./friendSlice";
 import UserTable from "./UserTable";
+import SearchInput from "../../components/SearchInput";
 
 function AddFriend() {
   const [filterName, setFilterName] = useState("");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const dispatch = useDispatch();
 
   const { currentPageUsers, usersById, totalUsers } = useSelector(
     (state) => state.friend
   );
   const users = currentPageUsers.map((userId) => usersById[userId]);
-
-  const handleSubmit = (searchQuery) => {
-    setFilterName(searchQuery);
-  };
+  const dispatch = useDispatch();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -34,6 +30,10 @@ function AddFriend() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleSubmit = (searchQuery) => {
+    setFilterName(searchQuery);
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ function AddFriend() {
       </Typography>
       <Card sx={{ p: 3 }}>
         <Stack spacing={2}>
-          <Stack direction={{ sx: "column", md: "row" }} alignItems="center">
+          <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
             <SearchInput handleSubmit={handleSubmit} />
 
             <Typography
@@ -67,10 +67,10 @@ function AddFriend() {
               sx={{
                 "& .MuiTablePagination-selectLabel, .MuiTablePagination-select, .MuiTablePagination-selectIcon":
                   {
-                    display: { sx: "none", md: "block" },
+                    display: { xs: "none", md: "block" },
                   },
               }}
-              components="div"
+              component="div"
               count={totalUsers ? totalUsers : 0}
               page={page}
               onPageChange={handleChangePage}
@@ -79,8 +79,8 @@ function AddFriend() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Stack>
+          <UserTable users={users} />
         </Stack>
-        <UserTable users={users} />
       </Card>
     </Container>
   );

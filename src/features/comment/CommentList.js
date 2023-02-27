@@ -1,10 +1,11 @@
-import { Pagination, Stack, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+
+import { Pagination, Stack, Typography } from "@mui/material";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { COMMENTS_PER_POST } from "../../app/config";
-import CommentCard from "./CommentCard";
 import { getComments } from "./commentSlice";
+import CommentCard from "./CommentCard";
 import LoadingScreen from "../../components/LoadingScreen";
+import { COMMENTS_PER_POST } from "../../app/config";
 
 function CommentList({ postId }) {
   const {
@@ -16,15 +17,14 @@ function CommentList({ postId }) {
   } = useSelector(
     (state) => ({
       commentsByPost: state.comment.commentsByPost[postId],
-      totalComments: state.comment.totalComments[postId],
-      currentPage: state.comment.currrentPageByPost[postId] || 1,
+      totalComments: state.comment.totalCommentsByPost[postId],
+      currentPage: state.comment.currentPageByPost[postId] || 1,
       commentsById: state.comment.commentsById,
       isLoading: state.comment.isLoading,
     }),
     shallowEqual
   );
   const totalPages = Math.ceil(totalComments / COMMENTS_PER_POST);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -42,6 +42,8 @@ function CommentList({ postId }) {
         ))}
       </Stack>
     );
+  } else if (isLoading) {
+    renderComments = <LoadingScreen />;
   }
 
   return (

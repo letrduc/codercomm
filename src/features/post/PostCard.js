@@ -9,12 +9,13 @@ import {
   CardHeader,
   IconButton,
 } from "@mui/material";
-import MorevertIcon from "@mui/icons-material/MoreVert";
 import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../utils/formatTime";
+
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostReaction from "./PostReaction";
-import CommentList from "../comment/CommentList";
 import CommentForm from "../comment/CommentForm";
+import CommentList from "../comment/CommentList";
 
 function PostCard({ post }) {
   return (
@@ -45,12 +46,14 @@ function PostCard({ post }) {
         }
         action={
           <IconButton>
-            <MorevertIcon sx={{ fontSize: 30 }} />
+            <MoreVertIcon sx={{ fontSize: 30 }} />
           </IconButton>
         }
       />
+
       <Stack spacing={2} sx={{ p: 3 }}>
         <Typography>{post.content}</Typography>
+
         {post.image && (
           <Box
             sx={{
@@ -63,9 +66,10 @@ function PostCard({ post }) {
             <img src={post.image} alt="post" />
           </Box>
         )}
+
         <PostReaction post={post} />
         <CommentList postId={post._id} />
-        <CommentForm postId={post._id} />{" "}
+        <CommentForm postId={post._id} />
       </Stack>
     </Card>
   );

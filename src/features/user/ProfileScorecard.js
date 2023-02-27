@@ -1,6 +1,5 @@
 import { Card, Stack, Typography, Divider } from "@mui/material";
 import { fNumber } from "../../utils/numberFormat";
-import React from "react";
 
 function ProfileScorecard({ profile }) {
   const { postCount, friendCount } = profile;

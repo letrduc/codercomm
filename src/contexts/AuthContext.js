@@ -29,13 +29,13 @@ const reducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        user: action.playload.user,
+        user: action.payload.user,
       };
     case REGISTER_SUCCESS:
       return {
         ...state,
         isAuthenticated: true,
-        user: action.playload.user,
+        user: action.payload.user,
       };
     case LOGOUT:
       return {
@@ -85,8 +85,6 @@ const reducer = (state, action) => {
   }
 };
 
-const AuthContext = createContext({ ...initialState });
-
 const setSession = (accessToken) => {
   if (accessToken) {
     window.localStorage.setItem("accessToken", accessToken);
@@ -96,6 +94,8 @@ const setSession = (accessToken) => {
     delete apiService.defaults.headers.common.Authorization;
   }
 };
+
+const AuthContext = createContext({ ...initialState });
 
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -118,19 +118,26 @@ function AuthProvider({ children }) {
           });
         } else {
           setSession(null);
+
           dispatch({
             type: INITIALIZE,
             payload: { isAuthenticated: false, user: null },
           });
         }
-      } catch (error) {
+      } catch (err) {
+        console.error(err);
+
         setSession(null);
         dispatch({
           type: INITIALIZE,
-          payload: { isAuthenticated: false, user: null },
+          payload: {
+            isAuthenticated: false,
+            user: null,
+          },
         });
       }
     };
+
     initialize();
   }, []);
 
@@ -153,9 +160,13 @@ function AuthProvider({ children }) {
   };
 
   const register = async ({ name, email, password }, callback) => {
-    const response = await apiService.post("/users", { name, email, password });
-    const { user, accessToken } = response.data;
+    const response = await apiService.post("/users", {
+      name,
+      email,
+      password,
+    });
 
+    const { user, accessToken } = response.data;
     setSession(accessToken);
     dispatch({
       type: REGISTER_SUCCESS,
@@ -165,14 +176,21 @@ function AuthProvider({ children }) {
     callback();
   };
 
-  const logout = (callback) => {
+  const logout = async (callback) => {
     setSession(null);
     dispatch({ type: LOGOUT });
     callback();
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        ...state,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

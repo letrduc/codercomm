@@ -1,14 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import apiService from "../../app/apiService";
 import { COMMENTS_PER_POST } from "../../app/config";
 
 const initialState = {
   isLoading: false,
-  errro: null,
-  commentsById: {},
+  error: null,
   commentsByPost: {},
-  commentPageByPost: {},
   totalCommentsByPost: {},
+  currentPageByPost: {},
+  commentsById: {},
 };
 
 const slice = createSlice({
@@ -18,18 +19,17 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
     },
-    createCommentSuccess(state, action) {
+
+    getCommentsSuccess(state, action) {
       state.isLoading = false;
-      state.error = null;
-    },
-    getCommentSuccess(state, action) {
-      state.isLoading = false;
-      state.error = null;
+      state.error = "";
       const { postId, comments, count, page } = action.payload;
+
       comments.forEach(
         (comment) => (state.commentsById[comment._id] = comment)
       );
@@ -39,6 +39,12 @@ const slice = createSlice({
       state.totalCommentsByPost[postId] = count;
       state.currentPageByPost[postId] = page;
     },
+
+    createCommentSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+    },
+
     sendCommentReactionSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
@@ -49,22 +55,6 @@ const slice = createSlice({
 });
 
 export default slice.reducer;
-
-export const createComment =
-  ({ postId, content }) =>
-  async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-      const response = await apiService.post("/comments", {
-        content,
-        postId,
-      });
-      dispatch(slice.actions.createCommentSuccess(response.data));
-      dispatch(getComments({ postId }));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error.message));
-    }
-  };
 
 export const getComments =
   ({ postId, page = 1, limit = COMMENTS_PER_POST }) =>
@@ -79,7 +69,7 @@ export const getComments =
         params,
       });
       dispatch(
-        slice.actions.getCommentSuccess({
+        slice.actions.getCommentsSuccess({
           ...response.data,
           postId,
           page,
@@ -87,6 +77,24 @@ export const getComments =
       );
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
+    }
+  };
+
+export const createComment =
+  ({ postId, content }) =>
+  async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await apiService.post("/comments", {
+        content,
+        postId,
+      });
+      dispatch(slice.actions.createCommentSuccess(response.data));
+      dispatch(getComments({ postId }));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
     }
   };
 
@@ -97,16 +105,17 @@ export const sendCommentReaction =
     try {
       const response = await apiService.post(`/reactions`, {
         targetType: "Comment",
-        targetIt: commentId,
+        targetId: commentId,
         emoji,
       });
       dispatch(
-        slice.actions.sendCommentReaction({
+        slice.actions.sendCommentReactionSuccess({
           commentId,
           reactions: response.data,
         })
       );
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
+      toast.error(error.message);
     }
   };

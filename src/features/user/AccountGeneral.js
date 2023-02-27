@@ -7,10 +7,9 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { FormProvider, FTextField, FUploadAvatar } from "../../components/form";
-
+import { fData } from "../../utils/numberFormat";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile } from "./userSlice";
-import { fData } from "../../utils/numberFormat";
 
 const UpdateUserSchema = yup.object().shape({
   name: yup.string().required("Name is required"),
@@ -18,7 +17,6 @@ const UpdateUserSchema = yup.object().shape({
 
 function AccountGeneral() {
   const { user } = useAuth();
-
   const isLoading = useSelector((state) => state.user.isLoading);
 
   const defaultValues = {
@@ -39,7 +37,6 @@ function AccountGeneral() {
     resolver: yupResolver(UpdateUserSchema),
     defaultValues,
   });
-
   const {
     setValue,
     handleSubmit,
@@ -47,9 +44,6 @@ function AccountGeneral() {
   } = methods;
 
   const dispatch = useDispatch();
-  const onSubmit = (data) => {
-    dispatch(updateUserProfile({ userId: user._id, ...data }));
-  };
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -66,6 +60,10 @@ function AccountGeneral() {
     },
     [setValue]
   );
+
+  const onSubmit = (data) => {
+    dispatch(updateUserProfile({ userId: user._id, ...data }));
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -95,6 +93,7 @@ function AccountGeneral() {
             />
           </Card>
         </Grid>
+
         <Grid item xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Box

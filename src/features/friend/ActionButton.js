@@ -1,5 +1,6 @@
 import { Button, Stack } from "@mui/material";
 import React from "react";
+import { useDispatch } from "react-redux";
 import {
   acceptRequest,
   cancelRequest,
@@ -7,12 +8,12 @@ import {
   removeFriend,
   sendFriendRequest,
 } from "./friendSlice";
-import { useDispatch } from "react-redux";
 
 function ActionButton({ currentUserId, targetUserId, friendship, sx }) {
   const dispatch = useDispatch();
 
   if (currentUserId === targetUserId) return null;
+
   const btnSendRequest = (
     <Button
       sx={{ fontSize: "0.6rem", ...sx }}
@@ -37,7 +38,6 @@ function ActionButton({ currentUserId, targetUserId, friendship, sx }) {
       Unfriend
     </Button>
   );
-
   const btnResend = (
     <Button
       sx={{ fontSize: "0.6rem", ...sx }}
@@ -48,7 +48,6 @@ function ActionButton({ currentUserId, targetUserId, friendship, sx }) {
       {friendship.from === currentUserId ? "Resend" : "Send"} Request
     </Button>
   );
-
   const btnCancelRequest = (
     <Button
       sx={{ fontSize: "0.6rem", ...sx }}
@@ -60,7 +59,6 @@ function ActionButton({ currentUserId, targetUserId, friendship, sx }) {
       Cancel Request
     </Button>
   );
-
   const btnGroupReact = (
     <Stack direction="row" spacing={1}>
       <Button

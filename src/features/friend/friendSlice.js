@@ -45,7 +45,7 @@ const slice = createSlice({
       state.totalPages = totalPages;
     },
 
-    getFriendsRequestSuccess(state, action) {
+    getFriendRequestsSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
 
@@ -106,6 +106,7 @@ export const getUsers =
       dispatch(slice.actions.getUsersSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
+      toast.error(error.message);
     }
   };
 
@@ -124,7 +125,7 @@ export const getFriends =
     }
   };
 
-export const getFriendsRequest =
+export const getFriendRequests =
   ({ filterName, page = 1, limit = 12 }) =>
   async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -134,7 +135,7 @@ export const getFriendsRequest =
       const response = await apiService.get("/friends/requests/incoming", {
         params,
       });
-      dispatch(slice.actions.getFriendsSuccess(response.data));
+      dispatch(slice.actions.getFriendRequestsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
       toast.error(error.message);
@@ -148,15 +149,12 @@ export const sendFriendRequest = (targetUserId) => async (dispatch) => {
       to: targetUserId,
     });
     dispatch(
-      slice.actions.sendFriendRequestSuccess({
-        ...response.data.data,
-        targetUserId,
-      })
+      slice.actions.sendFriendRequestSuccess({ ...response.data, targetUserId })
     );
     toast.success("Request sent");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
-    toast.error("error.message");
+    toast.error(error.message);
   }
 };
 
@@ -167,15 +165,12 @@ export const declineRequest = (targetUserId) => async (dispatch) => {
       status: "declined",
     });
     dispatch(
-      slice.actions.declineRequestSuccess({
-        ...response.data.data,
-        targetUserId,
-      })
+      slice.actions.declineRequestSuccess({ ...response.data, targetUserId })
     );
     toast.success("Request declined");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
-    toast.error("error.message");
+    toast.error(error.message);
   }
 };
 
@@ -186,15 +181,12 @@ export const acceptRequest = (targetUserId) => async (dispatch) => {
       status: "accepted",
     });
     dispatch(
-      slice.actions.acceptRequestSuccess({
-        ...response.data.data,
-        targetUserId,
-      })
+      slice.actions.acceptRequestSuccess({ ...response.data, targetUserId })
     );
     toast.success("Request accepted");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
-    toast.error("error.message");
+    toast.error(error.message);
   }
 };
 
@@ -205,15 +197,12 @@ export const cancelRequest = (targetUserId) => async (dispatch) => {
       `/friends/requests/${targetUserId}`
     );
     dispatch(
-      slice.actions.cancelRequestSuccess({
-        ...response.data.data,
-        targetUserId,
-      })
+      slice.actions.cancelRequestSuccess({ ...response.data, targetUserId })
     );
     toast.success("Request cancelled");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
-    toast.error("error.message");
+    toast.error(error.message);
   }
 };
 
@@ -222,11 +211,11 @@ export const removeFriend = (targetUserId) => async (dispatch) => {
   try {
     const response = await apiService.delete(`/friends/${targetUserId}`);
     dispatch(
-      slice.actions.removeFriendSuccess({ ...response.data.data, targetUserId })
+      slice.actions.removeFriendSuccess({ ...response.data, targetUserId })
     );
     toast.success("Friend removed");
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
-    toast.error("error.message");
+    toast.error(error.message);
   }
 };

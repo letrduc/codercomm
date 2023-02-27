@@ -1,7 +1,7 @@
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
-import CommentReaction from "./CommentReaction";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import { fDate } from "../../utils/formatTime";
+import CommentReaction from "./CommentReaction";
 
 function CommentCard({ comment }) {
   return (
@@ -10,7 +10,7 @@ function CommentCard({ comment }) {
       <Paper sx={{ p: 1.5, flexGrow: 1, bgcolor: "background.neutral" }}>
         <Stack
           direction="row"
-          alignItems={{ sm: "cent" }}
+          alignItems={{ sm: "center" }}
           justifyContent="space-between"
           sx={{ mb: 0.5 }}
         >

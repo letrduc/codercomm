@@ -9,10 +9,9 @@ import {
   Container,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getFriendsRequest } from "./friendSlice";
-import useCard from "./UserCard";
-import SearchInput from "../../components/SearchInput";
+import { getFriendRequests } from "./friendSlice";
 import UserCard from "./UserCard";
+import SearchInput from "../../components/SearchInput";
 
 function FriendRequests() {
   const [filterName, setFilterName] = useState("");
@@ -21,7 +20,6 @@ function FriendRequests() {
   const { currentPageUsers, usersById, totalUsers, totalPages } = useSelector(
     (state) => state.friend
   );
-
   const users = currentPageUsers.map((userId) => usersById[userId]);
   const dispatch = useDispatch();
 
@@ -30,7 +28,7 @@ function FriendRequests() {
   };
 
   useEffect(() => {
-    dispatch(getFriendsRequest({ filterName, page }));
+    dispatch(getFriendRequests({ filterName, page }));
   }, [filterName, page, dispatch]);
 
   return (
@@ -42,9 +40,7 @@ function FriendRequests() {
         <Stack spacing={2}>
           <Stack direction={{ xs: "column", md: "row" }} alignItems="center">
             <SearchInput handleSubmit={handleSubmit} />
-
             <Box sx={{ flexGrow: 1 }} />
-
             <Typography
               variant="subtitle"
               sx={{ color: "text.secondary", ml: 1 }}
@@ -52,8 +48,8 @@ function FriendRequests() {
               {totalUsers > 1
                 ? `${totalUsers} requests found`
                 : totalUsers === 1
-                ? `${totalUsers} requests found`
-                : "No friend found"}
+                ? `${totalUsers} request found`
+                : "No request found"}
             </Typography>
 
             <Pagination

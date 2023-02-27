@@ -9,10 +9,10 @@ import {
   Link,
   TableContainer,
   Box,
-  Tab,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+
 import FriendStatus from "./FriendStatus";
 import ActionButton from "./ActionButton";
 
@@ -20,7 +20,7 @@ function UserTable({ users }) {
   const { user } = useAuth();
   const currentUserId = user._id;
 
-  const getActionAndStatus = (targetUser) => {
+  const getActionsAndStatus = (targetUser) => {
     const props = {
       currentUserId: currentUserId,
       targetUserId: targetUser._id,
@@ -33,8 +33,8 @@ function UserTable({ users }) {
   };
 
   return (
-    <div>
-      <Box sx={{ overflow: "auto" }}>
+    <Box sx={{ overflowX: "auto" }}>
+      <TableContainer sx={{ minWidth: 800 }}>
         <Table>
           <TableHead>
             <TableRow>
@@ -57,7 +57,7 @@ function UserTable({ users }) {
           </TableHead>
           <TableBody>
             {users.map((user) => {
-              const { status, action } = getActionAndStatus(user);
+              const { status, action } = getActionsAndStatus(user);
               return (
                 <TableRow key={user._id} hover>
                   <TableCell
@@ -76,41 +76,37 @@ function UserTable({ users }) {
                       variant="subtitle2"
                       sx={{ fontWeight: 600 }}
                       component={RouterLink}
-                      to={`/user.${user._id}`}
+                      to={`/user/${user._id}`}
                     >
                       {user.name}
                     </Link>
                   </TableCell>
-
                   <TableCell
                     align="left"
-                    sx={{ display: { sx: "none", md: "table-cell" } }}
+                    sx={{ display: { xs: "none", md: "table-cell" } }}
                   >
                     {user.email}
                   </TableCell>
-
                   <TableCell
                     align="left"
-                    sx={{ display: { sx: "none", md: "table-cell" } }}
+                    sx={{ display: { xs: "none", md: "table-cell" } }}
                   >
                     {user.jobTitle}
                   </TableCell>
-
                   <TableCell
                     align="left"
-                    sx={{ display: { sx: "none", sm: "table-cell" } }}
+                    sx={{ display: { xs: "none", sm: "table-cell" } }}
                   >
                     {status}
                   </TableCell>
-
                   <TableCell align="left">{action}</TableCell>
                 </TableRow>
               );
             })}
           </TableBody>
         </Table>
-      </Box>
-    </div>
+      </TableContainer>
+    </Box>
   );
 }
 
